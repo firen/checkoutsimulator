@@ -17,6 +17,13 @@ import static org.junit.Assert.assertThat;
  * Created by Adam on 06.05.2016.
  */
 public class PricingRulesLoaderTests {
+    public static final List<Item> TEST_ITEMS = Arrays.asList(
+            new Item("A",50,Optional.of(new Item.SpecialPrice(3,130))),
+            new Item("B",30,Optional.of(new Item.SpecialPrice(2,45))),
+            new Item("C",20, Optional.empty()),
+            new Item("D",15, Optional.empty())
+    );
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -66,14 +73,7 @@ public class PricingRulesLoaderTests {
         Map result = pricingRulesLoader.load(correctRulesPath);
 
         //then
-        List<Item> expectedItems = Arrays.asList(
-                new Item("A",50,Optional.of(new Item.SpecialPrice(3,130))),
-                new Item("B",30,Optional.of(new Item.SpecialPrice(2,45))),
-                new Item("C",20, Optional.empty()),
-                new Item("D",15, Optional.empty())
-        );
-
-        Map<String, Item> expected = expectedItems.stream()
+        Map<String, Item> expected = TEST_ITEMS.stream()
                 .collect(
                         Collectors.toMap(
                                 Item::getSku,
