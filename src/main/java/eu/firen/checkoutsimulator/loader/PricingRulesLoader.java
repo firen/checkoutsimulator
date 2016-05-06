@@ -1,5 +1,6 @@
-package eu.firen;
+package eu.firen.checkoutsimulator.loader;
 
+import eu.firen.checkoutsimulator.Item;
 import org.springframework.util.StringUtils;
 
 import java.io.*;

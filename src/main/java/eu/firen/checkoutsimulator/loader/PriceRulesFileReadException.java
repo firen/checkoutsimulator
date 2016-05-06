@@ -1,4 +1,4 @@
-package eu.firen;
+package eu.firen.checkoutsimulator.loader;
 
 /**
  * Created by Adam on 06.05.2016.

@@ -1,4 +1,4 @@
-package eu.firen;
+package eu.firen.checkoutsimulator;
 
 import java.util.Objects;
 import java.util.Optional;
