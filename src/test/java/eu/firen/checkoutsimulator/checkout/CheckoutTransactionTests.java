@@ -111,7 +111,7 @@ public class CheckoutTransactionTests {
     }
 
     @Test
-    public void shouldCalculateUnitPriceAndSpecialPriceForAddedItemsOneWithoutSpecialPrice() {
+    public void shouldCalculateTotalPriceBasedOnUnitPriceAndSpecialPriceForAddedItemsOneWithoutSpecialPrice() {
         //given
         CheckoutTransaction checkoutTransaction = new CheckoutTransaction(TEST_ITEMS);
         final String existingSkuA = TEST_ITEMS.get(0).getSku();
