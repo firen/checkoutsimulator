@@ -2,9 +2,7 @@ package eu.firen.checkoutsimulator.checkout;
 
 import eu.firen.checkoutsimulator.domain.Item;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -12,21 +10,26 @@ import java.util.stream.Collectors;
  * Created by Adam on 07.05.2016.
  */
 public class CheckoutTransaction {
-    private Map<String, Item> testItems;
+    private Map<String, Item> items;
     private Map<String, Position> positions;
 
     public CheckoutTransaction() {
         this.positions = new LinkedHashMap<>();
-        this.testItems = new LinkedHashMap<>();
+        this.items = new LinkedHashMap<>();
     }
 
     public CheckoutTransaction(List<Item> items) {
         this();
-        this.testItems = items.stream()
+        this.items = items.stream()
                                 .collect(Collectors.toMap(
                                         Item::getSku,
                                         Function.identity()
                                 ));
+    }
+
+    public CheckoutTransaction(Map<String, Item> items) {
+        this();
+        this.items = items;
     }
 
     public long calculateTotalPrice() {
@@ -45,11 +48,11 @@ public class CheckoutTransaction {
     }
 
     public boolean addItem(String sku) {
-        if(testItems.containsKey(sku)) {
+        if(items.containsKey(sku)) {
             if(positions.containsKey(sku)) {
                 positions.get(sku).incrementQuantity();
             } else {
-                positions.put(sku, new Position(sku, testItems.get(sku), 1));
+                positions.put(sku, new Position(sku, items.get(sku), 1));
             }
             return true;
         } else {
@@ -61,12 +64,16 @@ public class CheckoutTransaction {
         return positions.get(sku);
     }
 
-    public class Position {
+    public List<Position> getPositions() {
+        return this.positions.values().stream().collect(Collectors.toList());
+    }
+
+    public static class Position {
         private String sku;
         private Item item;
         private int quantity;
 
-        private Position(String sku, Item item, int quantity) {
+        Position(String sku, Item item, int quantity) {
             this.sku = sku;
             this.item = item;
             this.quantity = quantity;
@@ -86,6 +93,21 @@ public class CheckoutTransaction {
 
         public Item getItem() {
             return item;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Position position = (Position) o;
+            return quantity == position.quantity &&
+                    Objects.equals(sku, position.sku) &&
+                    Objects.equals(item, position.item);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(sku, item, quantity);
         }
     }
 }

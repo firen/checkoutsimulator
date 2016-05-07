@@ -1,7 +1,10 @@
-package eu.firen.checkoutsimulator;
+package eu.firen.checkoutsimulator.checkout;
 
-import eu.firen.checkoutsimulator.checkout.CheckoutTransaction;
+import eu.firen.checkoutsimulator.checkout.CheckoutTransaction.Position;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static eu.firen.checkoutsimulator.PricingRulesLoaderTests.TEST_ITEMS;
 import static org.hamcrest.core.Is.is;
@@ -59,7 +62,7 @@ public class CheckoutTransactionTests {
 
         //when
         boolean result = checkoutTransaction.addItem(existingSku);
-        CheckoutTransaction.Position position = checkoutTransaction.getPosition(existingSku);
+        Position position = checkoutTransaction.getPosition(existingSku);
 
         //then
         assertThat(result, is(true));
@@ -77,7 +80,7 @@ public class CheckoutTransactionTests {
         //when
         checkoutTransaction.addItem(existingSku);
         boolean result = checkoutTransaction.addItem(existingSku);
-        CheckoutTransaction.Position position = checkoutTransaction.getPosition(existingSku);
+        Position position = checkoutTransaction.getPosition(existingSku);
 
         //then
         assertThat(result, is(true));
@@ -128,5 +131,34 @@ public class CheckoutTransactionTests {
         assertThat(resultAddC, is(true));
         assertThat(resultAddB2, is(true));
         assertThat(totalPrice, is(115L));
+    }
+
+    @Test
+    public void shouldReturnAllAddedItemsInOrder() {
+        //given
+        CheckoutTransaction checkoutTransaction = new CheckoutTransaction(TEST_ITEMS);
+        final String existingSkuA = TEST_ITEMS.get(0).getSku();
+        final String existingSkuB = TEST_ITEMS.get(1).getSku();
+        final String existingSkuC = TEST_ITEMS.get(2).getSku();
+
+        //when
+        boolean resultAddA = checkoutTransaction.addItem(existingSkuA);
+        boolean resultAddB = checkoutTransaction.addItem(existingSkuB);
+        boolean resultAddC = checkoutTransaction.addItem(existingSkuC);
+
+        //then
+        List<Position> expected = Arrays.asList(
+            new Position(existingSkuA, TEST_ITEMS.get(0), 1),
+            new Position(existingSkuB, TEST_ITEMS.get(1), 1),
+            new Position(existingSkuC, TEST_ITEMS.get(2), 1)
+        );
+
+        List<Position> result = checkoutTransaction.getPositions();
+
+        assertThat(resultAddA, is(true));
+        assertThat(resultAddB, is(true));
+        assertThat(resultAddC, is(true));
+        assertThat(result.size(), is(3));
+        assertThat(result, is(expected));
     }
 }
