@@ -20,9 +20,9 @@ public class CheckoutTransaction {
         this.testItems = new LinkedHashMap<>();
     }
 
-    public CheckoutTransaction(List<Item> testItems) {
+    public CheckoutTransaction(List<Item> items) {
         this();
-        this.testItems = testItems.stream()
+        this.testItems = items.stream()
                                 .collect(Collectors.toMap(
                                         Item::getSku,
                                         Function.identity()
