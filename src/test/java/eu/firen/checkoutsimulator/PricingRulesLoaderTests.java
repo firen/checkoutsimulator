@@ -1,5 +1,6 @@
 package eu.firen.checkoutsimulator;
 
+import eu.firen.checkoutsimulator.domain.Item;
 import eu.firen.checkoutsimulator.loader.PriceRulesFileReadException;
 import eu.firen.checkoutsimulator.loader.PricingRulesLoader;
 import org.junit.Rule;

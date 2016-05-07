@@ -1,6 +1,6 @@
 package eu.firen.checkoutsimulator.checkout;
 
-import eu.firen.checkoutsimulator.Item;
+import eu.firen.checkoutsimulator.domain.Item;
 
 import java.util.LinkedHashMap;
 import java.util.List;
