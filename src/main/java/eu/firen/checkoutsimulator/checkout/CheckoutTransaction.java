@@ -34,25 +34,32 @@ public class CheckoutTransaction {
 
     public long calculateTotalPrice() {
         return positions.values().stream()
-                .mapToLong(e -> {
-                    if(e.getItem().getSpecialPrice().isPresent()) {
-                        long bundleSize = e.getItem().getSpecialPrice().get().getBundleSize();
-                        long bundlePrice = e.getItem().getSpecialPrice().get().getBundlePrice();
-                        long itemPrice = (e.quantity / bundleSize) * bundlePrice
-                                + (e.quantity % bundleSize) * e.getItem().getUnitPrice();
-                        return itemPrice;
-                    } else {
-                        return e.quantity * e.getItem().getUnitPrice();
-                    }
-                }).sum();
+                .mapToLong(this::calculatePositionPrice)
+                .sum();
+    }
+
+    private long calculatePositionPrice(Position position) {
+        if(position.getItem().getSpecialPrice().isPresent()) {
+            long bundleSize = position.getItem().getSpecialPrice().get().getBundleSize();
+            long bundlePrice = position.getItem().getSpecialPrice().get().getBundlePrice();
+            long itemPrice = (position.quantity / bundleSize) * bundlePrice
+                    + (position.quantity % bundleSize) * position.getItem().getUnitPrice();
+            return itemPrice;
+        } else {
+            return position.quantity * position.getItem().getUnitPrice();
+        }
     }
 
     public boolean addItem(String sku) {
         if(items.containsKey(sku)) {
             if(positions.containsKey(sku)) {
-                positions.get(sku).incrementQuantity();
+                Position position = positions.get(sku);
+                position.incrementQuantity();
+                position.setPrice(calculatePositionPrice(position));
             } else {
-                positions.put(sku, new Position(sku, items.get(sku), 1));
+                Position position = new Position(sku, items.get(sku), 1, 0);
+                position.setPrice(calculatePositionPrice(position));
+                positions.put(sku, position);
             }
             return true;
         } else {
@@ -72,11 +79,13 @@ public class CheckoutTransaction {
         private String sku;
         private Item item;
         private int quantity;
+        private long price;
 
-        Position(String sku, Item item, int quantity) {
+        Position(String sku, Item item, int quantity, long price) {
             this.sku = sku;
             this.item = item;
             this.quantity = quantity;
+            this.price = price;
         }
 
         public String getSku() {
@@ -95,19 +104,28 @@ public class CheckoutTransaction {
             return item;
         }
 
+        public long getPrice() {
+            return price;
+        }
+
+        private void setPrice(long price) {
+            this.price = price;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Position position = (Position) o;
             return quantity == position.quantity &&
+                    price == position.price &&
                     Objects.equals(sku, position.sku) &&
                     Objects.equals(item, position.item);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(sku, item, quantity);
+            return Objects.hash(sku, item, quantity, price);
         }
     }
 }

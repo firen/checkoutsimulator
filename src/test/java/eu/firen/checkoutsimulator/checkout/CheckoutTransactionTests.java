@@ -131,6 +131,9 @@ public class CheckoutTransactionTests {
         assertThat(resultAddC, is(true));
         assertThat(resultAddB2, is(true));
         assertThat(totalPrice, is(115L));
+        assertThat(checkoutTransaction.getPosition(existingSkuA).getPrice(), is(50L));
+        assertThat(checkoutTransaction.getPosition(existingSkuB).getPrice(), is(45L));
+        assertThat(checkoutTransaction.getPosition(existingSkuC).getPrice(), is(20L));
     }
 
     @Test
@@ -148,9 +151,9 @@ public class CheckoutTransactionTests {
 
         //then
         List<Position> expected = Arrays.asList(
-            new Position(existingSkuA, TEST_ITEMS.get(0), 1),
-            new Position(existingSkuB, TEST_ITEMS.get(1), 1),
-            new Position(existingSkuC, TEST_ITEMS.get(2), 1)
+            new Position(existingSkuA, TEST_ITEMS.get(0), 1, 50),
+            new Position(existingSkuB, TEST_ITEMS.get(1), 1, 30),
+            new Position(existingSkuC, TEST_ITEMS.get(2), 1, 20)
         );
 
         List<Position> result = checkoutTransaction.getPositions();
