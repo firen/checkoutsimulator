@@ -19,7 +19,7 @@ import java.util.Scanner;
 
 @Controller
 @SpringBootApplication
-public class CheckoutsimulatorApplication {
+public class CheckoutSimulatorApplication {
 	@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 	@Bean
 	public CheckoutTransaction checkoutTransaction(HashMap<String, Item> items) {
@@ -33,8 +33,8 @@ public class CheckoutsimulatorApplication {
 	private ApplicationContext applicationContext;
 
 	public static void main(String[] args) throws Exception {
-		ConfigurableApplicationContext context = SpringApplication.run(CheckoutsimulatorApplication.class, args);
-		CheckoutsimulatorApplication bean = context.getBean(CheckoutsimulatorApplication.class);
+		ConfigurableApplicationContext context = SpringApplication.run(CheckoutSimulatorApplication.class, args);
+		CheckoutSimulatorApplication bean = context.getBean(CheckoutSimulatorApplication.class);
 		bean.run(args);
 	}
 
