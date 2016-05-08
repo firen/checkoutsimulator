@@ -1,6 +1,7 @@
 package eu.firen.checkoutsimulator.loader;
 
 import eu.firen.checkoutsimulator.domain.Item;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Adam on 06.05.2016.
  */
+@Component
 public class PricingRulesLoader {
 
     public static final String SPECIAL_PRICE_VALIDATION_PATTERN = "([0-9]+) for ([0-9]+)";
